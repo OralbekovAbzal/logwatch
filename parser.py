@@ -56,7 +56,10 @@ def parse_line(line: str) -> LogEntry:
         lines[5] = "u_" + str(lines[5])
     except ValueError:
         raise ParseError(f"invalid user id: '{lines[5]}'")
-    
+
+    if lines[6][:6] != "model=":
+        raise ParseError(f"model field must start with 'model=': '{lines[6]}'")
+
     if lines[2] == "/v1/generate":
         if lines[6][6:] == "-":
             raise ParseError("model is required for /v1/generate")

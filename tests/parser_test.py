@@ -12,7 +12,8 @@ wrong_logs = [
     "2026-11-09T12:00:03Z POST /v1/generate OK 1843ms user=u_1 model=kling",
     "2026-11-09T12:00:03Z POST /v1/generate 200 1843 user=u_1 model=kling",
     "2026-11-09T12:00:03Z POST v1/generate 200 12ms user=u_1 model=-",
-    ""
+    "",
+    "2026-11-09T12:00:01Z POST /v1/generate 200 1843ms user=u_42 modll=kling"
 ]
 
 log = parse_line(correct_log[0])
