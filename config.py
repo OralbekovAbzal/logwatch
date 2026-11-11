@@ -15,11 +15,11 @@ def load_config() -> tuple[int, float]:
             raise ConfigError(f"invalid SLO_P95_MS: '{os.getenv("SLO_P95_MS")}'")
 
     if os.getenv("SLO_ERROR_RATE") is None:
-        error_rate = 0.2
+        error_rate = 0.02
     else:
         try:
             error_rate = float(os.getenv("SLO_ERROR_RATE"))
-            if 0 < error_rate > 1:
+            if error_rate > 1 or error_rate < 0:
                 raise ValueError
         except ValueError:
             raise ConfigError(f"invalid SLO_ERROR_RATE: '{os.getenv("SLO_ERROR_RATE")}'")
