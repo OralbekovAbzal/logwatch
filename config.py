@@ -9,6 +9,8 @@ def load_config() -> tuple[int, float]:
     else:
         try:
             limit_p95 = int(os.getenv("SLO_P95_MS"))
+            if limit_p95 < 1:
+                raise ValueError
         except ValueError:
             raise ConfigError(f"invalid SLO_P95_MS: '{os.getenv("SLO_P95_MS")}'")
 
