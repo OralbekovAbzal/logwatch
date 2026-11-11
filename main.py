@@ -23,7 +23,7 @@ for line in sys.stdin:
     stat.add_log(log)
 
 if stat.total_amount == 0:
-    sys.stderr.write(f"no valid log lines found (parse errors: {broken_lines}), report not generated")
+    sys.stderr.write(f"no valid log lines found (parse errors: {broken_lines}), report not generated\n")
     sys.exit(2)
 
 paths_percents, error_rate, error_status, result = stat.percentage(limit_p95, error_limit)

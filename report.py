@@ -1,5 +1,3 @@
-from stats import Stats
-
 def text_report(summary: dict, error_limit: float, limit_p95: int) -> str:
     report = "logwatch report\n================\n"
     report += f"Requests:      {summary["log"].total_amount}     (parse errors: {summary["parse_errors"]})\n"
