@@ -48,11 +48,13 @@ class Stats:
 
         self.latencies[log.path].append(log.latency_ms)
 
-    def percentage(self, limit_p95, error_rate) -> tuple[dict, float]:
+    def percentage(self, limit_p95, error_limit) -> tuple[dict, float, str]:
         try:
             error_rate = self.error_amount / self.total_amount
+            error_status = "OK" if error_rate < error_limit else "VIOLATED"
         except ZeroDivisionError:
             error_rate = 0
+            error_status = "OK"
 
         percents = dict()
         for path, lat in self.latencies.items():
@@ -61,7 +63,7 @@ class Stats:
             if p95 > limit_p95:
                 slo_status = "VIOLATED"
             percents[path] = {"p50": p50,"p95": p95, "slo_status": slo_status}
-        return percents, error_rate
+        return percents, error_rate, error_status
 
 def percentile(latencies: list):
     latencies.sort()
