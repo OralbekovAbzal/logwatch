@@ -1,8 +1,8 @@
 from stats import Stats
 
-def text_report(logs: Stats, broken_lines: int, error_rate: int, error_limit: int, error_status: str) -> str:
+def text_report(summary: dict, error_limit: float, limit_p95: int) -> str:
     report = "logwatch report\n================\n"
-    report += f"Requests:      {logs.total_amount}     (parse errors: {broken_lines})\n"
-    report += f"Error rate    {error_rate}      SLO {(error_limit * 100):.2f}   {error_status}"
+    report += f"Requests:      {summary["total_requests"]}     (parse errors: {summary["parse_errors"]})\n"
+    report += f"Error rate    {summary["error_rate"]}      SLO {(error_limit * 100):.2f}   {summary["error_status"]}"
     return report
     

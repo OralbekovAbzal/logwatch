@@ -65,6 +65,14 @@ class Stats:
             percents[path] = {"p50": p50,"p95": p95, "slo_status": slo_status}
         return percents, error_rate, error_status
 
+    def sumarize(self, paths_percents: dict, error_rate: float, error_status: str, broken_lines: int) -> dict:
+        summary = dict()
+        summary["total_requests"] = self.total_amount
+        summary["parse_errors"] = broken_lines
+        summary["error_rate"] = error_rate
+        summary["error_status"] = error_status
+        return summary
+
 def percentile(latencies: list):
     latencies.sort()
     p50 = latencies[ceil(0.5 * len(latencies)) - 1]
