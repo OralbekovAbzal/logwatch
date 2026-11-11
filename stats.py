@@ -51,10 +51,14 @@ class Stats:
     def percentage(self, limit_p95, error_limit) -> tuple[dict, float, str]:
         try:
             error_rate = self.error_amount / self.total_amount
-            error_status = "OK" if error_rate < error_limit else "VIOLATED"
+            error_status, result = "OK", "OK"
+            if error_rate > error_limit:
+                error_status = "VIOLATED"
+                result = "VIOLATED"
+
         except ZeroDivisionError:
             error_rate = 0
-            error_status = "OK"
+            error_status, result = "OK", "OK"
 
         percents = dict()
         for path, lat in self.latencies.items():
@@ -62,15 +66,18 @@ class Stats:
             p50, p95 = percentile(lat)
             if p95 > limit_p95:
                 slo_status = "VIOLATED"
+                result = "VIOLATED"
             percents[path] = {"p50": p50,"p95": p95, "slo_status": slo_status}
-        return percents, error_rate, error_status
+        return percents, error_rate, error_status, result
 
-    def sumarize(self, paths_percents: dict, error_rate: float, error_status: str, broken_lines: int) -> dict:
+    def sumarize(self, paths_percents: dict, error_rate: float, error_status: str, broken_lines: int, result: str) -> dict:
         summary = dict()
-        summary["total_requests"] = self.total_amount
+        summary["log"] = self
         summary["parse_errors"] = broken_lines
         summary["error_rate"] = error_rate
         summary["error_status"] = error_status
+        summary["paths_percents"] = paths_percents
+        summary["result"] = result
         return summary
 
 def percentile(latencies: list):
