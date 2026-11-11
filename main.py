@@ -24,6 +24,6 @@ for line in sys.stdin:
 
 paths_percents, error_rate, error_status, result = stat.percentage(limit_p95, error_limit)
 
-summary = stat.sumarize(paths_percents, error_rate, error_status, broken_lines, error_status)
+summary = stat.sumarize(paths_percents, error_rate, error_status, broken_lines, result)
 
 print(text_report(summary, error_limit, limit_p95))
