@@ -2,7 +2,6 @@ from collections import Counter, defaultdict
 from datetime import datetime
 from models import LogEntry
 from math import ceil
-from config import limit_p95
 
 class Stats:
     start_date: datetime
@@ -49,7 +48,7 @@ class Stats:
 
         self.latencies[log.path].append(log.latency_ms)
 
-    def percentage(self) -> tuple[dict, float]:
+    def percentage(self, limit_p95, error_rate) -> tuple[dict, float]:
         try:
             error_rate = self.error_amount / self.total_amount
         except ZeroDivisionError:
