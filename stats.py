@@ -53,8 +53,8 @@ class Stats:
             error_rate = self.error_amount / self.total_amount
             error_status, result = "OK", "OK"
             if error_rate > error_limit:
-                error_status = "VIOLATED"
-                result = "VIOLATED"
+                error_status = "SLO VIOLATED"
+                result = "SLO VIOLATED"
 
         except ZeroDivisionError:
             error_rate = 0
@@ -65,14 +65,21 @@ class Stats:
             slo_status = "OK"
             p50, p95 = percentile(lat)
             if p95 > limit_p95:
-                slo_status = "VIOLATED"
-                result = "VIOLATED"
+                slo_status = "SLO VIOLATED"
+                result = "SLO VIOLATED"
             percents[path] = {"p50": p50,"p95": p95, "slo_status": slo_status}
         return percents, error_rate, error_status, result
 
     def sumarize(self, paths_percents: dict, error_rate: float, error_status: str, broken_lines: int, result: str) -> dict:
         summary = dict()
-        summary["log"] = self
+        summary["log"] = {
+            "start_date": self.start_date.isoformat(),
+            "end_date": self.end_date.isoformat(),
+            "total_amount": self.total_amount,
+            "status_counts": self.status_counts,
+            "request_counts": self.request_counts,
+            "user_counts": self.user_counts
+        }
         summary["parse_errors"] = broken_lines
         summary["error_rate"] = error_rate
         summary["error_status"] = error_status
