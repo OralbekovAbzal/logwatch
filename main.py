@@ -8,16 +8,13 @@ import argparse
 
 parser = argparse.ArgumentParser("python main.py")
 parser.add_argument("--top", type=int, default=5, help="How many users to show in 'Top users'. Default - 5")
-parser.add_argument("--format", type=str, default="text", help="Accepts only text or json. Default - text")
+parser.add_argument("--format", type=str, default="text", choices=["text", "json"], help="Accepts only text or json. Default - text")
 parser.add_argument("--verbose",action="store_true", help="Shows the reason of broken lines")
 args = parser.parse_args()
 
-if args.format not in ("text","json"):
-    sys.stderr.write(f"Wrong argument for report format: {args.format}")
-    sys.exit(2)
-
 if args.top < 0:
-    sys.stderr.write(f"Value for top can not be less than 0")
+    sys.stderr.write(f"Value for top can not be less than 0\n")
+    sys.exit(2)
 
 try:
     limit_p95, error_limit = load_config()
@@ -28,12 +25,14 @@ except ConfigError as e:
 stat = Stats()
 
 broken_lines = 0
+num = 0
 for line in sys.stdin:
     try:
         log = parse_line(line)
     except ParseError as e:
         if args.verbose:
-            sys.stderr.write(f"Parse error at line: {e}\n")
+            num += 1
+            sys.stderr.write(f"Parse error at line {num}: {e}\n")
         broken_lines += 1
         continue
     stat.add_log(log)
@@ -50,5 +49,5 @@ if args.format == "text":
 else:
     print(json_report(summary, error_limit, limit_p95, args.top))
 
-if result == "VIOLATED":
+if result == "SLO VIOLATED":
     sys.exit(1)

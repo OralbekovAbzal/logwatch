@@ -9,7 +9,7 @@ def text_report(summary: dict, error_limit: float, limit_p95: int, top: int) -> 
         report += f"  {code}   {count}\n"
 
     report += f"\nTop endpoints          requests   p50 ms   p95 ms   SLO {limit_p95}\n"
-    for path, count in summary["log"]["request_counts"].most_common(5):
+    for path, count in summary["log"]["request_counts"].most_common(top):
         report += f"  {path:<12}       {count:>10}   {summary["paths_percents"][path]["p50"]:>6}   {summary["paths_percents"][path]["p95"]:>6}   {summary["paths_percents"][path]["slo_status"]:<10}\n"
 
     report += "\nTop users\n"
@@ -19,7 +19,7 @@ def text_report(summary: dict, error_limit: float, limit_p95: int, top: int) -> 
     report += f"\n Result: {summary["result"]}"
     return report
 
-def json_report(summary: dict, error_limit: float, limit_p95: int, top: int) -> json:
+def json_report(summary: dict, error_limit: float, limit_p95: int, top: int) -> str:
     result = {
         "total": summary["log"]["total_amount"],
         "parse_errors": summary["parse_errors"],
@@ -44,7 +44,7 @@ def json_report(summary: dict, error_limit: float, limit_p95: int, top: int) -> 
     for code, count in sorted(summary["log"]["status_counts"].items()):
         result["statuses"][code] = count
 
-    for path, count in summary["log"]["request_counts"].most_common(5):
+    for path, count in summary["log"]["request_counts"].most_common(top):
         p = {
             "path": path,
             "requests": count,
